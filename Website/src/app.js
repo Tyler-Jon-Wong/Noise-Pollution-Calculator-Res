@@ -1,9 +1,13 @@
 const path = require('path');
 const express = require('express');
+const fs = require("fs");
+
+
 const geocode =  require('./utils/geocode'); //imports geocode function
+const distance = require('./utils/distance'); //imports distance function
+
 const publicDirectory = path.join(__dirname, '../public') //sets directory of where html files are
 
-const fs = require("fs");
 
 const app = express();
 
@@ -46,34 +50,40 @@ app.get('/noise', (req, res) => {
                 const dataBuffer = fs.readFileSync('data/airportData.json');
                 const dataJSON = dataBuffer.toString();
                 const finalData = JSON.parse(dataJSON);
-                var airportLats = []
-                var airportLongs = []
+                var airportLats = [];
+                var airportLongs = [];
+                var noiseFactors = [];
 
                 for(var a=0; a<nearbyAirports.length; a++) {
                     for (var b=0; b<finalData.length;b++) {
                         if (finalData[b].airport_ident == nearbyAirports[a]) {
                             if (finalData[b].airport_ident != finalData[b-1].airport_ident) {  
-                                airportLats.push(finalData[a].latitudeAP);                             
+                                airportLats.push(finalData[a].latitudeAP); 
+                                airportLongs.push(finalData[a].longitudeAP);                            
                             } else {}
                         }
 
                     }
                     
                 }
-                 for(var c=0; c<nearbyAirports.length; c++) {
-                    for (var d=0; d<finalData.length;d++) {
-                        if (finalData[d].airport_ident == nearbyAirports[c]) {
-                            if (finalData[d].airport_ident != finalData[d-1].airport_ident) {  
-                                airportLongs.push(finalData[c].longitudeAP);                             
-                            } else {}
-                        }
-                    }
+                //  for(var c=0; c<nearbyAirports.length; c++) {
+                //     for (var d=0; d<finalData.length;d++) {
+                //         if (finalData[d].airport_ident == nearbyAirports[c]) {
+                //             if (finalData[d].airport_ident != finalData[d-1].airport_ident) {  
+                //                 airportLongs.push(finalData[c].longitudeAP);                             
+                //             } else {}
+                //         }
+                //     }
                     
-                }
+                // }
+
 
             res.send({
                 latitudesAP: airportLats,
-                longitudesAP: airportLongs
+                longitudesAP: airportLongs,
+                location,
+                longitude,
+                latitude
             })        
 
              }
