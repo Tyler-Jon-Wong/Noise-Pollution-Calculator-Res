@@ -14,7 +14,7 @@ locationForm.addEventListener('submit', (e) => {
     //message1.textContent = 'Loading...'
     message1.textContent = 'Loading';
 
-   fetch('http://localhost:3000/noise?address=' + location).then((response) => { //sends location variable to json
+   fetch('http://hushedhomes.tech/noise?address=' + location).then((response) => { //sends location variable to json
        response.json().then((data) => { //receives data
            //console.log(data);
         if (data.error) {
