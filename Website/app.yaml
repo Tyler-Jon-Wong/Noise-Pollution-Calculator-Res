@@ -1,0 +1,6 @@
+runtime: nodejs10
+handlers:
+- url: /public
+  static_dir: public
+- url: /.*
+  script: auto
