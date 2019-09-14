@@ -2,24 +2,85 @@
 <html>
 <head>
     <title>HushedHomes</title>
-   
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+   crossorigin=""/>
+    <style>
+      @import url('https://fonts.googleapis.com/css?family=Alegreya+Sans+SC&display=swap');
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-    <div class="main-content">
-        <p>Use this site to get your noise info!</p>
-
-        <form>
-            <input placeholder="Location">
-            <button>Search</button>
-        </form>
-
-        <p id="message-1"></p>
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7z
+tg8Jm2Og==" crossorigin=""></script>
+    <div class="main-wrapper">
+        <div class="parallax-wrapper">
+              <div class="content">
+                  <h1 id="title-text">HUSHED HOUSES</h1>
+                  <p>
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                  </p>
+              </div>
+        </div>
+        <div class="regular-wrapper" >
+              <div class="content">
+                  <h1 style="font-size: 80px; color: #5076b3;">Search A Location:</h1>
+                  <form id="loc">
+                    <input placeholder="Location">
+                      <button>Search</button>
+                  </form>
+              </div>
+                <p id="message-1"></p>
         <p id="message-2"></p>
-
+        <div id="mapid">
+        <script>
+            var lat = document.querySelector('#message-1').innerHTML;
+            var lon = document.querySelector('#message-2').innerHTML;
+            console.log(lat + " " + lon);
+                var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214
+AriISLbB6B5aw', {
+                maxZoom: 18,
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                        '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                id: 'mapbox.streets'
+        }).addTo(mymap);
+            function changeMap() {
+                var latlon = document.querySelector('#message-2').innerHTML.split(" ");
+                var lat = latlon[0];
+                var lon = latlon[1];
+                mymap.setView([lat, lon], 13);
+            }
+        </script>
     </div>
-
-    <script src="js/index.js"></script>
-</body>   
-
+          </div>
+    
+        <div class="parallax-wrapper">
+                  <div class="content">
+                      <h1 id="title-text">HUSHED HOUSES</h1>
+                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                        eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                         quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                         Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                  </div>
+              </div>
+    </div>
+    
+    
+    <input type="button" class="help-button" value="+">
+    <div id="help-content"><br>
+      To find the amount of possible noise in an area, simply add the address or longitude and latitude co-ordinates
+      into the white text bar at the top of the map and press enter. The possible noise will show in a pop-up bar on the bottom of the map.
+    </div>
+    <script src="com.js"></script>
+</body> 
 </html>
