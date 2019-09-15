@@ -50,40 +50,44 @@ app.get('/noise', (req, res) => {
                 const dataBuffer = fs.readFileSync('data/airportData.json');
                 const dataJSON = dataBuffer.toString();
                 const finalData = JSON.parse(dataJSON);
+
+                const dataBuffer1 = fs.readFileSync('data/airportCoor.json');
+                const dataJSON1 = dataBuffer1.toString();
+                const finalAirport = JSON.parse(dataJSON1);
+
                 var airportLats = [];
                 var airportLongs = [];
                 var noiseFactors = [];
 
                 for(var a=0; a<nearbyAirports.length; a++) {
-                    for (var b=0; b<finalData.length;b++) {
-                        if (finalData[b].airport_ident == nearbyAirports[a]) {
-                            if (finalData[b].airport_ident != finalData[b-1].airport_ident) {  
-                                airportLats.push(finalData[a].latitudeAP); 
-                                airportLongs.push(finalData[a].longitudeAP);                            
+                    for (var b=0; b<finalAirport.length; b++) {
+                        if (finalAirport[b].gps_code == nearbyAirports[a]) {
+                            if (finalAirport[b].gps_code != finalAirport[b-1].gps_code) {  
+                                airportLats.push(finalAirport[b].latitude_deg); 
+                                airportLongs.push(finalAirport[b].longitude_deg); 
+                                var airportText = ""
+
+                                dist = distance([latitude, longitude], [finalAirport[b].latitude_deg, finalAirport[b].longitude_deg])
+                                dist = Math.round(dist, 2);
+                                airportText = finalAirport[b].name + " " + dist.toString(10) + " km away."
+                                noiseFactors.push(airportText);
+        
+
                             } else {}
                         }
 
                     }
                     
                 }
-                //  for(var c=0; c<nearbyAirports.length; c++) {
-                //     for (var d=0; d<finalData.length;d++) {
-                //         if (finalData[d].airport_ident == nearbyAirports[c]) {
-                //             if (finalData[d].airport_ident != finalData[d-1].airport_ident) {  
-                //                 airportLongs.push(finalData[c].longitudeAP);                             
-                //             } else {}
-                //         }
-                //     }
-                    
-                // }
-
+    
 
             res.send({
                 latitudesAP: airportLats,
                 longitudesAP: airportLongs,
                 location,
                 longitude,
-                latitude
+                latitude,
+                noiseFactors
             })        
 
              }
