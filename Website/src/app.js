@@ -46,21 +46,33 @@ app.get('/noise', (req, res) => {
             if (error) {
                 return res.send({error})
             } else {
-                nearbyAirports = ["CYYZ", "CYZD", "CYOO", "CYKZ", "CYTZ"]
                 const dataBuffer = fs.readFileSync('data/airportData.json');
                 const dataJSON = dataBuffer.toString();
                 const finalData = JSON.parse(dataJSON);
-
                 const dataBuffer1 = fs.readFileSync('data/airportCoor.json');
                 const dataJSON1 = dataBuffer1.toString();
                 const finalAirport = JSON.parse(dataJSON1);
+
+                var nearbyAirports = [];
+
+               // for (var airP=0; airP)
+
+                for (var i=0; i<finalAirport.length;i++) {
+                    if (distance([finalAirport[i].latitude_deg, finalAirport[i].longitude_deg], [latitude, longitude]) < 20) {
+                        if (finalAirport[i].gps_code != "") {
+                        nearbyAirports.push(finalAirport[i].gps_code);
+                        } 
+                    }
+                }
 
                 var airportLats = [];
                 var airportLongs = [];
                 var noiseFactors = [];
                 var runways = [];
                 var runway1 = []
+              //nearbyAirports = ["CYYZ", "CYZD", "CYOO", "CYKZ", "CYTZ"]
 
+                console.log('nearby: ' + nearbyAirports.length)
                 for(var a=0; a<nearbyAirports.length; a++) {
                     for (var b=0; b<finalAirport.length; b++) {
                         if (finalAirport[b].gps_code == nearbyAirports[a]) {
