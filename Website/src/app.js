@@ -5,6 +5,7 @@ const fs = require("fs");
 
 const geocode =  require('./utils/geocode'); //imports geocode function
 const distance = require('./utils/distance'); //imports distance function
+const airpaths = require('./utils/airpaths') //imports airpaths function
 
 const publicDirectory = path.join(__dirname, '../public') //sets directory of where html files are
 
@@ -42,7 +43,6 @@ app.get('/noise', (req, res) => {
             })   
         }
         geocode(req.query.address, (error, {latitude, longitude, location} ={}) => {
-
             if (error) {
                 return res.send({error})
             } else {
@@ -58,47 +58,68 @@ app.get('/noise', (req, res) => {
                 var airportLats = [];
                 var airportLongs = [];
                 var noiseFactors = [];
+                var runways = [];
+                var runway1 = []
 
                 for(var a=0; a<nearbyAirports.length; a++) {
                     for (var b=0; b<finalAirport.length; b++) {
                         if (finalAirport[b].gps_code == nearbyAirports[a]) {
-                            if (finalAirport[b].gps_code != finalAirport[b-1].gps_code) {  
+                            if (finalAirport[b].gps_code != finalAirport[b-1].gps_code) {
+                                runway1 = []  
                                 airportLats.push(finalAirport[b].latitude_deg); 
                                 airportLongs.push(finalAirport[b].longitude_deg); 
                                 var airportText = ""
 
                                 dist = distance([latitude, longitude], [finalAirport[b].latitude_deg, finalAirport[b].longitude_deg])
                                 dist = Math.round(dist, 2);
+
+                                //add if smaller than 20km
+                                if (dist > 25) {
+                                } else {
                                 airportText = finalAirport[b].name + " " + dist.toString(10) + " km away."
                                 noiseFactors.push(airportText);
         
+                                for (var num=0; num<finalData.length; num++) {
+                                    //console.log(finalData[num].airport_ident + " " + nearbyAirports[a])
+                                    if (finalData[num].airport_ident == nearbyAirports[a]) {
+                                        runway1 = [];
+                                        dist = -0.03;
+                                        if (finalData[num].length_ft > 8000) {
+                                            dist = -0.08;
+                                        } else if (finalData[num].length_ft < 1500){
+                                            dist = -0.15
+                                        }
+                                        //console.log([finalData[num].Start_latitude + " " + finalData[num].Start_longitude]+ " " + [finalData[num].End_latitude + " " + finalData[num].End_longitude])
+                                        runway1 = airpaths(dist, [finalData[num].Start_latitude, finalData[num].Start_longitude], [finalData[num].End_latitude, finalData[num].End_longitude])
+                                        runways.push(runway1);
+                                        //console.log(runway1)
+                                    }
+                                   
 
-                            } else {}
+                                }
+                                
+
+                                }
+                            }
+                        
                         }
 
                     }
                     
                 }
-    
-
             res.send({
                 latitudesAP: airportLats,
                 longitudesAP: airportLongs,
                 location,
                 longitude,
                 latitude,
-                noiseFactors
+                noiseFactors,
+                runways
             })        
 
              }
             })
-        }) 
-
-
-//console.log(latitude1)
-        
-//console.log('test4')
-    
+        })     
 
 app.listen(8080), () => {
     console.log('Server is up and running on port 8080');
